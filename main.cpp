@@ -13,6 +13,11 @@ mt19937 rng;
 int generateRandomInt(int min, int max);
 void printArray(int *array, size_t size);
 void heapsort(int* array, size_t size);
+void buildheap(int* array, size_t size);
+void maxheapify(int* array, size_t, int pos);
+void swap(int& a, int& b){
+	a^=b;b^=a;a^=b;
+}
 bool validate(int* array, size_t size);
 
 int main(int argc, char *argv[]) {
@@ -48,8 +53,37 @@ void printArray(int *array, size_t size) {
     cout << endl;
 }
 
+void maxheapify(int* array, size_t size, int pos){
+	int right = (pos+1)<<1,
+		left = right-1;
+	int maxlocal;
+	if(right < size && array[right] > array[pos] ){
+		maxlocal = right;
+	}else{
+		maxlocal = pos;
+	}
+	if( left < size && array[left] > array[maxlocal] ){
+		maxlocal = left;
+	}
+	if( maxlocal != pos){
+		swap(array[pos], array[maxlocal]);
+		maxheapify(array, size, maxlocal);
+	}
+	
+}
+
+void buildheap(int* array, size_t size){
+	for(int i=(size>>1); i>=0 ; i--){
+		maxheapify(array, size, i);
+	}
+}
 void heapsort(int* array, size_t size) {
-    // TODO
+	buildheap(array, size);
+	for(int i = size-1; i>0 ; i--){
+		swap(array[0], array[i]);
+		size--;
+		maxheapify(array, size, 0);
+	}
 }
 
 bool validate(int* array, size_t size) {
